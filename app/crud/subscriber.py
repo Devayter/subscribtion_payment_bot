@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
-from sqlalchemy import select
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models.subscriber import Subscriber
@@ -38,14 +38,31 @@ class CRUDSubscriber():
             )
         ).scalars().first()
 
+    async def get_almost_expired(self, session: AsyncSession):
+        current_time = datetime.now()
+        day_of_expire = current_time + relativedelta(days=3)
+        return (
+            await session.execute(
+                select(self.model).where(
+                    and_(
+                        self.model.end_date > current_time,
+                        self.model.end_date <= day_of_expire
+                    )
+                )
+            )
+        )
+
     async def get_expired(self, session: AsyncSession):
         current_time = datetime.now()
         return (
             await session.execute(
-                select(self.model).where(self.model.end_date < current_time)
+                select(self.model).where(
+
+                    self.model.end_date < current_time
+                )
             )
         ).scalars().all()
-
+    
     async def update(
             self,
             session: AsyncSession,

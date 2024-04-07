@@ -51,7 +51,9 @@ async def successful_payment(
     )
     await message.answer(
         f'Оплата прошла успешно \n'
-        f'Подписка действительна до {subscription.end_date.strftime('%Y-%m-%d')}'
+        f'Подписка действительна до {
+            subscription.end_date.strftime('%Y-%m-%d')
+        }'
     )
     link = await bot.create_chat_invite_link(
         chat_id=-1002143176488,

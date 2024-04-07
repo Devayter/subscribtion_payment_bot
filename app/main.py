@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-# from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
 from aiogram import Bot, Dispatcher
 from core.config import settings
 from core.db import create_db, async_session
@@ -16,13 +16,12 @@ async def main():
     configure_logging('sub_payment_bot')
     logging.info('Старт бота')
 
-    bot = Bot(token=settings.bot_token, parse_mode='HTML')
+    bot = Bot(token=settings.bot_token)
     dp = Dispatcher()
     dp.update.middleware(DataBaseSession(async_session=async_session))
     dp.include_router(user_handler.router)
     dp.include_router(other_handler.router)
 
-    # scheduler = AsyncIOScheduler()
     set_schedule_jobs(bot, async_session)
     scheduler.start()
 
