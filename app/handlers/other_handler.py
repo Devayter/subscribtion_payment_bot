@@ -1,11 +1,18 @@
-from aiogram import Bot, F, Router, types
-from aiogram.types import ChatJoinRequest, Message
+from aiogram import Bot, Router
+from aiogram.types import ChatJoinRequest
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from crud.subscriber import subscribtion_crud
 
-from crud.subscriber import subscription_crud
 
 router = Router()
+
+
+ACCESS_DENIED = (
+    'Ошибка доступа. Активируйте ссылку-приглашение на аккаунте, '
+    'с которого была произведена оплата'
+)
+WELCOME_MESSAGE = 'Добро пожаловать, {name}!'
 
 
 @router.chat_join_request()
@@ -14,17 +21,17 @@ async def aproove_request(
     session: AsyncSession,
     bot: Bot
 ):
-    if subscription := await subscription_crud.get(
+    if subscribtion := await subscribtion_crud.get(
         session=session,
         id=chat_join_request.from_user.id
     ):
         await chat_join_request.approve()
         await bot.send_message(
             chat_id=chat_join_request.chat.id,
-            text=f'{subscription.name} вступил в группу'
+            text=WELCOME_MESSAGE.format(name=subscribtion.name)
         )
     else:
         await bot.send_message(
             chat_id=chat_join_request.from_user.id,
-            text='Подписка на канал не была оплачена'
+            text=ACCESS_DENIED
         )

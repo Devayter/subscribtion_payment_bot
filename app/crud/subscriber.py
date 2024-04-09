@@ -19,17 +19,17 @@ class CRUDSubscriber():
             name: str,
             subscribtion_period: int
     ):
-        subscription = self.model(
+        subscribtion = self.model(
             id=id,
             name=name,
             end_date=(
                 datetime.now() + relativedelta(months=subscribtion_period)
             )
         )
-        session.add(subscription)
+        session.add(subscribtion)
         await session.commit()
-        await session.refresh(subscription)
-        return subscription
+        await session.refresh(subscribtion)
+        return subscribtion
 
     async def get(self, session: AsyncSession, id: int):
         return (
@@ -62,26 +62,26 @@ class CRUDSubscriber():
                 )
             )
         ).scalars().all()
-    
+
     async def update(
             self,
             session: AsyncSession,
-            subscription: Subscriber,
+            subscribtion: Subscriber,
             subscribtion_period: int
     ):
-        subscription.end_date += relativedelta(months=subscribtion_period)
-        session.add(subscription)
+        subscribtion.end_date += relativedelta(months=subscribtion_period)
+        session.add(subscribtion)
         await session.commit()
-        await session.refresh(subscription)
-        return subscription
+        await session.refresh(subscribtion)
+        return subscribtion
 
     async def remove(
             self,
-            subscription: Subscriber,
+            subscribtion: Subscriber,
             session: AsyncSession
     ):
-        await session.delete(subscription)
+        await session.delete(subscribtion)
         await session.commit()
 
 
-subscription_crud = CRUDSubscriber(Subscriber)
+subscribtion_crud = CRUDSubscriber(Subscriber)
