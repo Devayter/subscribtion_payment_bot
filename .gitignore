@@ -38,8 +38,10 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 #logs.
-sub_payment_bot*
+sub_payment_bot.log*
 
+#db
+subscribers.db
 
 # Unit test / coverage reports
 htmlcov/
