@@ -1,7 +1,6 @@
 import asyncio
 import logging
 
-
 from aiogram import Bot, Dispatcher
 from core.config import settings
 from core.db import create_db, async_session
